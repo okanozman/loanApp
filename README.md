@@ -51,7 +51,7 @@ This Loan API is designed for a bank to manage customer loans. It allows bank em
 **Description:** Retrieves all installments for a given loan.
 
 ### 4. Pay Loan
-**Endpoint:** `POST /api/loans/pay/{loanId}](http://localhost:8080/api/loans/pay/1?amount=850`
+**Endpoint:** `POST api/loans/pay/{loanId}?amount=850`
 **Description:** Pays installments for a loan.
 **Business Rules:**
 - Installments must be paid **wholly or not at all**.
