@@ -8,7 +8,9 @@ This Loan API is designed for a bank to manage customer loans. It allows bank em
 - **List Loans**: Retrieve all loans for a specific customer.
 - **List Installments**: View all installments related to a particular loan.
 - **Pay Loan**: Process installment payments for a loan.
-##Technologies Used
+
+  
+## Technologies Used
 - **Spring Boot (Java)
 - **Spring MVC
 - **Spring Data JPA
