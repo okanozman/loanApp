@@ -132,14 +132,8 @@ Run the tests using:
 mvn test
 ```
 
-## API Response Example (Loan Payment)
-```json
-{
-  "installmentsPaid": 2,
-  "totalAmountSpent": 200,
-  "loanFullyPaid": false
-}
-```
+## Error Handling
+The API will return appropriate HTTP status codes and messages for errors, such as validation issues or insufficient funds.
 
 ## Contributors
 - OKAN OZMAN  
