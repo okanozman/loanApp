@@ -110,7 +110,7 @@ public class Installment {
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/your-repo/loanApp.git
+   git clone https://github.com/okanozman/loanApp.git
    cd loan-api
    ```
 2. Configure database in `application.properties`:
