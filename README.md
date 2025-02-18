@@ -1,105 +1,130 @@
-Loan API README
-Overview
-This README provides an overview of the Loan API, which allows bank employees to manage loans for customers. The API includes functionality to create loans, list loans, list installments, and pay installments.
+# Loan API - Backend Developer Case (Credit Module Challenge)
 
-Features
-Create Loan: Create a new loan for a customer with validation checks.
-List Loans: Retrieve a list of loans for a specific customer.
-List Installments: View all installments associated with a specific loan.
-Pay Loan: Make payments towards installments of a loan with specific rules.
-API Endpoints
-1. Create Loan
-Endpoint: POST /api/loans
-Description: Creates a new loan for a given customer.
-Request Body:
-json
-Copy code
+## Overview
+This Loan API is designed for a bank to manage customer loans. It allows bank employees to create loans, list existing loans, retrieve installment details, and process loan payments. The API ensures business rules compliance, such as installment constraints, payment conditions, and customer loan limits.
+
+## Features
+- **Create Loan**: Add a new loan for a customer.
+- **List Loans**: Retrieve all loans for a specific customer.
+- **List Installments**: View all installments related to a particular loan.
+- **Pay Loan**: Process installment payments for a loan.
+
+## API Endpoints
+
+### 1. Create Loan
+**Endpoint:** `POST /api/loans`
+**Description:** Creates a new loan for a customer.
+**Request Body:**
+```json
 {
-  "customerId": "string",
-  "amount": "number",
-  "interestRate": "number",
-  "installments": "number"
+  "customer_id": "12345",
+  "amount": 10000,
+  "interest_rate": 0.2,
+  "num_installments": 12
 }
-Response:
-201 Created: Loan created successfully.
-400 Bad Request: Validation errors.
-2. List Loans
-Endpoint: GET /api/loans
-Description: Lists loans for a given customer.
-Query Parameters:
-customerId: Unique identifier for the customer.
-installments: (Optional) Filter by number of installments.
-isPaid: (Optional) Filter by loan payment status.
-Response:
-200 OK: Returns a list of loans.
-3. List Installments
-Endpoint: GET /api/loans/{loanId}/installments
-Description: Lists installments for a given loan.
-Response:
-200 OK: Returns a list of installments.
-4. Pay Loan
-Endpoint: POST /api/loans/{loanId}/pay
-Description: Pay installments for a given loan.
-Request Body:
-json
-Copy code
+```
+**Business Rules:**
+- Customers must have enough credit limit.
+- Allowed installment options: **6, 9, 12, 24** months.
+- Interest rate range: **0.1 – 0.5**.
+- Equal installment amounts.
+- First installment due on the **first day of the next month**.
+
+### 2. List Loans
+**Endpoint:** `GET /api/loans?customer_id=12345`
+**Description:** Retrieves all loans for a specific customer.
+**Optional Filters:**
+- `num_installments`
+- `is_paid`
+
+### 3. List Installments
+**Endpoint:** `GET /api/loans/{loan_id}/installments`
+**Description:** Retrieves all installments for a given loan.
+
+### 4. Pay Loan
+**Endpoint:** `POST /api/loans/{loan_id}/pay`
+**Description:** Pays installments for a loan.
+**Request Body:**
+```json
 {
-  "amount": "number"
+  "amount": 500
 }
-Response:
-200 OK: Returns the result of the payment operation.
-400 Bad Request: Validation errors.
-Database Schema
-Customer Table
-customerId: UUID
-name: String
-limit: Decimal
-Loan Table
-loanId: UUID
-customerId: UUID
-amount: Decimal
-interestRate: Decimal
-installments: Integer
-isPaid: Boolean
-Installment Table
-installmentId: UUID
-loanId: UUID
-dueDate: Date
-amount: Decimal
-isPaid: Boolean
-Setup Instructions
-Clone the Repository:
+```
+**Business Rules:**
+- Installments must be paid **wholly or not at all**.
+- Pays the **earliest due installments first**.
+- Cannot pay installments with a due date **more than 3 months ahead**.
+- Response includes **installments paid, total amount spent, and loan status**.
 
-bash
-Copy code
-git clone <repository-url>
-cd <repository-directory>
-Install Dependencies:
+## Database Schema
 
-bash
-Copy code
-mvn install
-Configure Database:
+### Customers Table
+| Column       | Type    | Description                |
+|-------------|--------|----------------------------|
+| id          | UUID   | Unique identifier          |
+| name        | String | Customer name              |
+| credit_limit | Float  | Maximum allowable credit  |
 
-Update the application.properties file with your database connection details.
-Run the Application:
+### Loans Table
+| Column         | Type    | Description                      |
+|---------------|--------|----------------------------------|
+| id            | UUID   | Unique identifier               |
+| customer_id   | UUID   | Reference to Customers Table    |
+| amount        | Float  | Principal loan amount           |
+| interest_rate | Float  | Interest rate applied           |
+| total_amount  | Float  | Amount * (1 + interest rate)    |
+| num_installments | Int | Number of installments         |
+| is_paid       | Bool   | Loan fully paid status         |
 
-bash
-Copy code
-mvn spring-boot:run
-Access the API:
+### Installments Table
+| Column        | Type    | Description                      |
+|--------------|--------|----------------------------------|
+| id           | UUID   | Unique identifier               |
+| loan_id      | UUID   | Reference to Loans Table        |
+| due_date     | Date   | Due date of the installment     |
+| amount       | Float  | Installment amount              |
+| is_paid      | Bool   | Paid status                     |
 
-The API will be available at http://localhost:8080/api/loans.
-Testing the API
-Use tools like Postman or curl to test the API endpoints.
-Ensure to test all endpoints with valid and invalid data to verify error handling.
-Error Handling
-The API will return appropriate HTTP status codes and messages for errors, such as validation issues or insufficient funds.
-Conclusion
-This Loan API provides a robust solution for managing loans within a banking application, ensuring compliance with business rules while offering a user-friendly interface for bank employees.
+## Setup and Installation
 
-License
-This project is licensed under the MIT License - see the LICENSE file for details.
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/your-repo/loan-api.git
+   cd loan-api
+   ```
+2. Install dependencies:
+   ```sh
+   pip install -r requirements.txt
+   ```
+3. Configure database connection in `.env`.
+4. Run migrations:
+   ```sh
+   python manage.py migrate
+   ```
+5. Start the API server:
+   ```sh
+   python manage.py runserver
+   ```
 
-Contact
-For any questions or issues, please contact Okan Ozman at okanozman@yahoo.com.tr.
+## Testing
+Run the tests using:
+```sh
+pytest
+```
+
+## API Response Example (Loan Payment)
+```json
+{
+  "installments_paid": 2,
+  "total_amount_spent": 200,
+  "loan_fully_paid": false
+}
+```
+
+## Contributors
+- [Your Name]
+- [Your Contact]
+
+## License
+This project is licensed under the MIT License.
+
