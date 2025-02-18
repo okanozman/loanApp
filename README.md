@@ -11,11 +11,11 @@ This Loan API is designed for a bank to manage customer loans. It allows bank em
 
   
 ## Technologies Used
-- **Spring Boot (Java)
-- **Spring MVC
-- **Spring Data JPA
-- **H2 / MySQL Database
-- **Postman (For Testing)
+- Spring Boot (Java)
+- Spring MVC
+- Spring Data JPA
+- H2 / MySQL Database
+- Postman (For Testing)
 
 
 ## API Endpoints
@@ -110,7 +110,7 @@ public class Installment {
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/your-repo/loan-api.git
+   git clone https://github.com/your-repo/loanApp.git
    cd loan-api
    ```
 2. Configure database in `application.properties`:
